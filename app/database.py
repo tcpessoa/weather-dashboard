@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-import models, schemas
+from . import models, schemas
 
 def save_weather_data(db: Session, weather_data: schemas.WeatherData):
     """_summary_

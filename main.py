@@ -1,10 +1,10 @@
 import requests
 from dotenv import load_dotenv
 import os
+from app import database
 from config import DATABASE_URL
 from sqlalchemy import create_engine
-from sqlalchemy.orm import Session, sessionmaker
-from app import models, schemas, database
+from sqlalchemy.orm import sessionmaker
 from config import DATABASE_URL
 import schedule
 import time
