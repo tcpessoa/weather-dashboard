@@ -10,4 +10,5 @@ __pycache__/
 env/
 
 # Ignore the local configuration file for your IDE
-config.py
+app\__pycache__/
+app\config.py
