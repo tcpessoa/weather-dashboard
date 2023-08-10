@@ -20,6 +20,14 @@ engine = create_engine(DATABASE_URL)
 Session = sessionmaker(autocommit=False, autoflush=False,bind=engine)
 
 def extract_weather_data(Location):
+    """_summary_
+
+    Args:
+        Location (_type_): dict with the lat,lon and appid to a location
+
+    Returns:
+        Json data 
+    """
     try:
         url= "https://api.openweathermap.org/data/2.5/weather?"
         response = requests.get(url,params=Location)
@@ -31,6 +39,14 @@ def extract_weather_data(Location):
     
 
 def transform_weather_data(weather_data):
+    """_summary_
+
+    Args:
+        weather_data (Json): stores the json from the get request
+
+    Returns:
+        exctract data from the json
+    """
     try:
         location=weather_data["name"],
         longitude=weather_data["coord"]["lon"],
@@ -45,6 +61,17 @@ def transform_weather_data(weather_data):
     
 
 def load_weather_data_to_db(location,longitude,latitude,temperature, humidity, pressure, weather_description):
+    """_summary_
+
+    Args:
+        location (string): name of the location
+        longitude (float): longitude of the location
+        latitude (float): latitude of the location
+        temperature (float): temperature value at current state
+        humidity (float): current humidity value
+        pressure (float): current pressure value
+        weather_description (string): description of the current weather condition
+    """
     try:
         db_session=Session()
         weather_data_to_db = models.Weather(location=location,longitude=longitude,latitude=latitude,temperature=temperature, humidity=humidity,pressure=pressure, weather_description=weather_description)
@@ -57,6 +84,9 @@ def load_weather_data_to_db(location,longitude,latitude,temperature, humidity, p
         logging.error(f"Error loading weather data to database: {e}")
 
 def run_etl():
+    """_summary_
+    
+    """
     weather_data = extract_weather_data( Location)
     if weather_data:
         location,longitude,latitude,temperature, humidity,pressure, weather_description = transform_weather_data(weather_data)
