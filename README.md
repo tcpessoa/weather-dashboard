@@ -45,3 +45,7 @@ pytest
 ```
 This will run all tests under the `tests/` folder.
 
+# TODO
+- Validate the JSON response of openweathermap so that I have a types object after the request
+- Fix the pytest error
+
