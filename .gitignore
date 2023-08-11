@@ -8,6 +8,7 @@ __pycache__/
 
 # Ignore virtual environment folders
 env/
+venv/
 
 # Ignore the local configuration file for your IDE
 app\__pycache__/
