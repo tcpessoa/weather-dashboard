@@ -4,7 +4,7 @@ from sqlalchemy.sql import func
 
 Base = declarative_base()
 
-class Weather(Base):
+class Weather(Base): # type: ignore
     __tablename__ = "weather_table" 
     
     id = Column(Integer, primary_key=True, index=True)
