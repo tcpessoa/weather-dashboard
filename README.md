@@ -4,28 +4,44 @@ A real-time weather dashboard
 # Overview diagram
 
 ![App Diagram](./docs/WeatherDashboard.excalidraw.png)
+
+# Requirements
+- Python
+- Docker
+
 # Getting started
 - Clone the repository
 - Create a Virtual Environment
+
+```sh
+python -m venv env
 ```
-Python -m venv env
-```
+
 - Activate the virtual environment
-  ```
-  env\Scripts\activate
-  ```
+```sh
+env\Scripts\activate
+```
+
 - Install the requirements
-  ```
-  pip install -r requirements.txt
-  ```
--  In the main directory create a **.env** file with your weather api key. You can find you key [here](https://openweathermap.org/current)
-- create a **config file** . This contains the database URL.
+```sh
+pip install -r requirements.txt
 ```
-DATABASE_URL = (('postgresql+psycopg2://user:password\
-@hostname:port/database_name')
-```
+
+-  In the main directory create a **.env** file based on `.env.example` with your weather api key and your database connection info. 
+You can find you key [here](https://openweathermap.org/current).
+
+You need a running instance of postgres in order to store the data.
+Run `docker-compose up -d` to run a local postgres instance in the background.
+
 - Run the script
-```
+```sh
 python main.py
 ```
   
+# Test
+At the root folder, run this in the terminal:
+```sh
+pytest
+```
+This will run all tests under the `tests/` folder.
+
