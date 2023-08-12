@@ -1,7 +1,6 @@
-import logging
 import os
 
-import requests # type: ignore
+import requests  # type: ignore
 from dotenv import load_dotenv
 from pydantic import ValidationError
 from sqlalchemy import create_engine
@@ -9,7 +8,7 @@ from sqlalchemy.orm import sessionmaker
 
 from app import models
 from app.config import DATABASE_URL
-
+from app.logger import logger
 
 load_dotenv()
 
@@ -36,9 +35,10 @@ def extract_weather_data(location):
         weather_data_validated = validate_weather_data(weather_data)
         return weather_data_validated
     except requests.exceptions.RequestException as req_err:
-        logging.error(f"Error fetching weather data: {req_err}")
+        logger.error(f"Error fetching weather data: {req_err}")
 
     return None
+
 
 def validate_weather_data(weather_data):
     try:
@@ -47,6 +47,7 @@ def validate_weather_data(weather_data):
     except ValidationError as e:
         print("Validation error:", e)
         return None
+
 
 def transform_weather_data(weather_data: models.WeatherModel):
     """_summary_
@@ -64,6 +65,9 @@ def transform_weather_data(weather_data: models.WeatherModel):
     humidity = weather_data.main.humidity
     pressure = weather_data.main.pressure
     weather_description = weather_data.weather[0].description
+    logger.info(
+        f"Location: {location} Temperature: {temperature} Weather Description: {weather_description}"
+    )
     return (
         location,
         longitude,
@@ -106,7 +110,7 @@ def load_weather_data_to_db(
         print("Weather data saved to database")
 
     except Exception as e:
-        logging.error(f"Error loading weather data to database: {e}")
+        logger.error(f"Error loading weather data to database: {e}")
 
 
 def run_etl():
@@ -123,6 +127,7 @@ def run_etl():
             pressure,
             weather_description,
         ) = transform_weather_data(weather_data)
+
         load_weather_data_to_db(
             location,
             longitude,
@@ -133,5 +138,23 @@ def run_etl():
             weather_description,
         )
     else:
-        logging.error("No weather data to load to database")
+        logger.error("No weather data to load to database")
 
+
+if __name__ == "__main__":
+    """
+    Run this file to extract and transform weather data
+    without loading it to the database
+    """
+    location = {"lat": -1.292066, "lon": 36.821945, "appid": os.getenv("WEATHER_API")}
+    weather_data = extract_weather_data(location)
+    if weather_data:
+        (
+            location,
+            longitude,
+            latitude,
+            temperature,
+            humidity,
+            pressure,
+            weather_description,
+        ) = transform_weather_data(weather_data)
