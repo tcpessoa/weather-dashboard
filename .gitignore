@@ -13,3 +13,6 @@ venv/
 # Ignore the local configuration file for your IDE
 app\__pycache__/
 app\config.py
+
+# Ignore log file
+file.log
