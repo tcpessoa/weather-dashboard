@@ -1,7 +1,7 @@
-from sqlalchemy import TIMESTAMP, Column, Float, Integer, String # type: ignore
-from sqlalchemy.orm import DeclarativeBase # type: ignore
-from sqlalchemy.sql import func # type: ignore
-from pydantic import BaseModel # type: ignore
+from sqlalchemy import TIMESTAMP, Column, Float, Integer, String
+from sqlalchemy.orm import DeclarativeBase
+from sqlalchemy.sql import func
+from pydantic import BaseModel
 
 # Check https://docs.sqlalchemy.org/en/20/changelog/whatsnew_20.html#migrating-an-existing-mapping
 # for declarative base

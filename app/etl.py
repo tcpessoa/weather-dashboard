@@ -1,11 +1,11 @@
 import logging
 import os
 
-import requests  # type: ignore
-from dotenv import load_dotenv  # type: ignore
-from pydantic import ValidationError  # type: ignore
-from sqlalchemy import create_engine  # type: ignore
-from sqlalchemy.orm import sessionmaker  # type: ignore
+import requests # type: ignore
+from dotenv import load_dotenv
+from pydantic import ValidationError
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
 
 from app import models
 from app.config import DATABASE_URL
