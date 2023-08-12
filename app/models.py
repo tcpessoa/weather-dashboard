@@ -1,10 +1,14 @@
-from sqlalchemy import TIMESTAMP, Column, Integer, String, Float
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.sql import func
+from sqlalchemy import TIMESTAMP, Column, Float, Integer, String # type: ignore
+from sqlalchemy.orm import DeclarativeBase # type: ignore
+from sqlalchemy.sql import func # type: ignore
 
-Base = declarative_base()
+# Check https://docs.sqlalchemy.org/en/20/changelog/whatsnew_20.html#migrating-an-existing-mapping
+# for declarative base
 
-class Weather(Base): # type: ignore
+class Base(DeclarativeBase):
+    pass
+
+class Weather(Base):
     __tablename__ = "weather_table" 
     
     id = Column(Integer, primary_key=True, index=True)
