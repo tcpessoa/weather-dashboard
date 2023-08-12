@@ -66,7 +66,8 @@ def transform_weather_data(weather_data: models.WeatherModel):
     pressure = weather_data.main.pressure
     weather_description = weather_data.weather[0].description
     logger.info(
-        f"Location: {location} Temperature: {temperature} Weather Description: {weather_description}"
+        f"Location: {location} Temperature: {temperature} \
+Weather Description: {weather_description}"
     )
     return (
         location,
