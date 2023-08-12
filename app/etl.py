@@ -3,12 +3,13 @@ import os
 
 import requests  # type: ignore
 from dotenv import load_dotenv  # type: ignore
+from pydantic import ValidationError  # type: ignore
 from sqlalchemy import create_engine  # type: ignore
 from sqlalchemy.orm import sessionmaker  # type: ignore
 
+from app import models
 from app.config import DATABASE_URL
 
-from . import models
 
 load_dotenv()
 
@@ -29,14 +30,25 @@ def extract_weather_data(location):
     try:
         url = "https://api.openweathermap.org/data/2.5/weather?"
         response = requests.get(url, params=location)
+        response.raise_for_status()  # Raise HTTPError for non-2xx responses
+
         weather_data = response.json()
-        return weather_data
-    except Exception as e:
-        logging.error(f"fetching weather data failed {e}")
+        weather_data_validated = validate_weather_data(weather_data)
+        return weather_data_validated
+    except requests.exceptions.RequestException as req_err:
+        logging.error(f"Error fetching weather data: {req_err}")
+
+    return None
+
+def validate_weather_data(weather_data):
+    try:
+        validated_data = models.WeatherModel(**weather_data)
+        return validated_data
+    except ValidationError as e:
+        print("Validation error:", e)
         return None
 
-
-def transform_weather_data(weather_data: dict):
+def transform_weather_data(weather_data: models.WeatherModel):
     """_summary_
 
     Args:
@@ -45,26 +57,22 @@ def transform_weather_data(weather_data: dict):
     Returns:
         exctract data from the json
     """
-    try:
-        location = (weather_data["name"],)
-        longitude = (weather_data["coord"]["lon"],)
-        latitude = (weather_data["coord"]["lat"],)
-        temperature = (weather_data["main"]["temp"],)
-        humidity = (weather_data["main"]["humidity"],)
-        pressure = (weather_data["main"]["pressure"],)
-        weather_description = weather_data["weather"][0]["description"]
-        return (
-            location,
-            longitude,
-            latitude,
-            temperature,
-            humidity,
-            pressure,
-            weather_description,
-        )
-    except KeyError as e:
-        logging.error(f"Error transforming weather data: {e}")
-        return None
+    location = weather_data.name
+    longitude = weather_data.coord.lon
+    latitude = weather_data.coord.lat
+    temperature = weather_data.main.temp
+    humidity = weather_data.main.humidity
+    pressure = weather_data.main.pressure
+    weather_description = weather_data.weather[0].description
+    return (
+        location,
+        longitude,
+        latitude,
+        temperature,
+        humidity,
+        pressure,
+        weather_description,
+    )
 
 
 def load_weather_data_to_db(

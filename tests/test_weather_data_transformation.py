@@ -1,5 +1,8 @@
+from pydantic import ValidationError # type: ignore
 from app.etl import \
     transform_weather_data  # Replace 'your_module' with the actual module name
+from app.models import WeatherModel
+import pytest # type: ignore
 
 
 def test_valid_data():
@@ -9,13 +12,14 @@ def test_valid_data():
         "main": {"temp": 25.6, "humidity": 60, "pressure": 1013.2},
         "weather": [{"description": "Clear sky"}],
     }
+    weather_data = WeatherModel(**weather_data)
     expected_result = (
-        ("New York",),
-        (-74.006,),
-        (40.7128,),
-        (25.6,),
-        (60,),
-        (1013.2,),
+        "New York",
+        -74.006,
+        40.7128,
+        25.6,
+        60,
+        1013.2,
         "Clear sky",
     )
     assert transform_weather_data(weather_data) == expected_result
@@ -28,5 +32,8 @@ def test_missing_key():
         "main": {"temp": 20.3, "humidity": 75}
         # "weather" key is missing here
     }
-    assert transform_weather_data(weather_data) is None
+    # test that a ValidationError is raised
+    with pytest.raises(ValidationError):
+        weather_data = WeatherModel(**weather_data)
+
 

@@ -1,6 +1,7 @@
 from sqlalchemy import TIMESTAMP, Column, Float, Integer, String # type: ignore
 from sqlalchemy.orm import DeclarativeBase # type: ignore
 from sqlalchemy.sql import func # type: ignore
+from pydantic import BaseModel # type: ignore
 
 # Check https://docs.sqlalchemy.org/en/20/changelog/whatsnew_20.html#migrating-an-existing-mapping
 # for declarative base
@@ -20,4 +21,21 @@ class Weather(Base):
     location = Column(String(256))
     weather_description = Column(String(256))
     timestamp = Column(TIMESTAMP, server_default=func.now())
-    
+
+class CoordinatesModel(BaseModel):
+    lon: float
+    lat: float
+
+class MainDataModel(BaseModel):
+    temp: float
+    humidity: int
+    pressure: float
+
+class WeatherDescriptionModel(BaseModel):
+    description: str
+
+class WeatherModel(BaseModel):
+    name: str
+    coord: CoordinatesModel
+    main: MainDataModel
+    weather: list[WeatherDescriptionModel]   
