@@ -36,8 +36,7 @@ def extract_weather_data(location):
         return weather_data_validated
     except requests.exceptions.RequestException as req_err:
         logger.error(f"Error fetching weather data: {req_err}")
-
-    return None
+        raise req_err
 
 
 def validate_weather_data(weather_data):
@@ -46,10 +45,10 @@ def validate_weather_data(weather_data):
         return validated_data
     except ValidationError as e:
         print("Validation error:", e)
-        return None
+        raise e
 
 
-def transform_weather_data(weather_data: models.WeatherModel):
+def transform_weather_data(weather_data: models.WeatherModel) -> models.WeatherCreate:
     """_summary_
 
     Args:
@@ -58,31 +57,23 @@ def transform_weather_data(weather_data: models.WeatherModel):
     Returns:
         exctract data from the json
     """
-    location = weather_data.name
-    longitude = weather_data.coord.lon
-    latitude = weather_data.coord.lat
-    temperature = weather_data.main.temp
-    humidity = weather_data.main.humidity
-    pressure = weather_data.main.pressure
-    weather_description = weather_data.weather[0].description
+    weather_create = models.WeatherCreate(
+        location=weather_data.name,
+        longitude=weather_data.coord.lon,
+        latitude=weather_data.coord.lat,
+        temperature=weather_data.main.temp,
+        humidity=weather_data.main.humidity,
+        pressure=weather_data.main.pressure,
+        weather_description=weather_data.weather[0].description,
+    )
     logger.info(
-        f"Location: {location} Temperature: {temperature} \
-Weather Description: {weather_description}"
+        f"Location: {weather_create.location} Temperature: {weather_create.temperature} \
+Weather Description: {weather_create.weather_description}"
     )
-    return (
-        location,
-        longitude,
-        latitude,
-        temperature,
-        humidity,
-        pressure,
-        weather_description,
-    )
+    return weather_create
 
 
-def load_weather_data_to_db(
-    location, longitude, latitude, temperature, humidity, pressure, weather_description
-):
+def load_weather_data_to_db(weather_create: models.WeatherCreate):
     """_summary_
 
     Args:
@@ -96,15 +87,7 @@ def load_weather_data_to_db(
     """
     try:
         db_session = Session()
-        weather_data_to_db = models.Weather(
-            location=location,
-            longitude=longitude,
-            latitude=latitude,
-            temperature=temperature,
-            humidity=humidity,
-            pressure=pressure,
-            weather_description=weather_description,
-        )
+        weather_data_to_db = models.Weather(**weather_create.model_dump())
         db_session.add(weather_data_to_db)
         db_session.commit()
         db_session.refresh(weather_data_to_db)
@@ -118,28 +101,8 @@ def run_etl():
     """_summary_"""
     location = {"lat": -1.292066, "lon": 36.821945, "appid": os.getenv("WEATHER_API")}
     weather_data = extract_weather_data(location)
-    if weather_data:
-        (
-            location,
-            longitude,
-            latitude,
-            temperature,
-            humidity,
-            pressure,
-            weather_description,
-        ) = transform_weather_data(weather_data)
-
-        load_weather_data_to_db(
-            location,
-            longitude,
-            latitude,
-            temperature,
-            humidity,
-            pressure,
-            weather_description,
-        )
-    else:
-        logger.error("No weather data to load to database")
+    weather_create = transform_weather_data(weather_data)
+    load_weather_data_to_db(weather_create)
 
 
 if __name__ == "__main__":
@@ -149,13 +112,5 @@ if __name__ == "__main__":
     """
     location = {"lat": -1.292066, "lon": 36.821945, "appid": os.getenv("WEATHER_API")}
     weather_data = extract_weather_data(location)
-    if weather_data:
-        (
-            location,
-            longitude,
-            latitude,
-            temperature,
-            humidity,
-            pressure,
-            weather_description,
-        ) = transform_weather_data(weather_data)
+    weather_data_create = transform_weather_data(weather_data)
+    logger.info(f"weather_data_create: {weather_data_create}")

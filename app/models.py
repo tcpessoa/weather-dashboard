@@ -22,6 +22,15 @@ class Weather(Base):
     weather_description = Column(String(256))
     timestamp = Column(TIMESTAMP, server_default=func.now())
 
+class WeatherCreate(BaseModel):
+    temperature: float
+    latitude: float
+    longitude: float
+    humidity: float
+    pressure: float
+    location: str
+    weather_description: str
+
 class CoordinatesModel(BaseModel):
     lon: float
     lat: float

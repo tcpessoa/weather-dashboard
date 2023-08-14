@@ -1,7 +1,7 @@
 from pydantic import ValidationError # type: ignore
 from app.etl import \
     transform_weather_data  # Replace 'your_module' with the actual module name
-from app.models import WeatherModel
+from app.models import WeatherModel, WeatherCreate
 import pytest # type: ignore
 
 
@@ -13,14 +13,14 @@ def test_valid_data():
         "weather": [{"description": "Clear sky"}],
     }
     weather_data = WeatherModel(**weather_data)
-    expected_result = (
-        "New York",
-        -74.006,
-        40.7128,
-        25.6,
-        60,
-        1013.2,
-        "Clear sky",
+    expected_result = WeatherCreate(
+        location="New York",
+        longitude=-74.006,
+        latitude=40.7128,
+        temperature=25.6,
+        humidity=60,
+        pressure=1013.2,
+        weather_description="Clear sky",
     )
     assert transform_weather_data(weather_data) == expected_result
 
