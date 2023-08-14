@@ -5,6 +5,7 @@ PIP = $(VENV)/bin/pip
 
 
 run: venv
+	${PYTHON} -m alembic upgrade head
 	$(PYTHON) main.py
 
 venv: requirements.txt
