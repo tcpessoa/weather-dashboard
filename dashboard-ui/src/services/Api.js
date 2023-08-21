@@ -20,4 +20,3 @@ export const fetchData = () => {
     }, 5000);
   });
 }
-

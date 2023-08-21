@@ -44,5 +44,9 @@ Currently using `echarts-for-react`, check examples [here](https://git.hust.cc/e
 # TODO
 - [x] Validate the JSON response of openweathermap so that I have a types object after the request
 - [x] Fix the pytest error
-- [ ] Build UI dashboard
+- [x] Build UI dashboard
+- [ ] Build dashboard visualizations
+- [ ] Build dashboard API
+- [ ] Connect API data that queries the Database to the UI dashboard
+
 
