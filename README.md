@@ -35,9 +35,14 @@ This will run all tests under the `tests/` folder.
 This project uses Alembic to handle migrations.
 Check more info [here](./alembic/README.md)
 
+# Dashboard UI
+Built with React and Apache Echarts.
+
+Currently using `echarts-for-react`, check examples [here](https://git.hust.cc/echarts-for-react/examples/simple)
+
+
 # TODO
 - [x] Validate the JSON response of openweathermap so that I have a types object after the request
 - [x] Fix the pytest error
 - [ ] Build UI dashboard
-
 
