@@ -1,15 +1,14 @@
 from sqlalchemy import TIMESTAMP, Column, Float, Integer, String
-from sqlalchemy.orm import DeclarativeBase
+from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.sql import func
 from pydantic import BaseModel
 
 # Check https://docs.sqlalchemy.org/en/20/changelog/whatsnew_20.html#migrating-an-existing-mapping
 # for declarative base
 
-class Base(DeclarativeBase):
-    pass
+Base = declarative_base()
 
-class Weather(Base):
+class Weather(Base): # type: ignore
     __tablename__ = "weather_table" 
     
     id = Column(Integer, primary_key=True, index=True)

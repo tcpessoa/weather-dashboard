@@ -3,7 +3,7 @@ from logging.config import fileConfig
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 
-from alembic import context
+from alembic import context # type: ignore
 from app.config import DATABASE_URL
 
 # this is the Alembic Config object, which provides
@@ -18,7 +18,7 @@ if config.config_file_name is not None:
 # add your model's MetaData object here
 # for 'autogenerate' support
 from app.models import Base
-target_metadata = Base.metadata
+target_metadata = Base.metadata # type: ignore
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
@@ -64,7 +64,7 @@ def run_migrations_online() -> None:
         poolclass=pool.NullPool,
     )
 
-    with connectable.connect() as connection:
+    with connectable.connect() as connection: # type: ignore
         context.configure(
             connection=connection, target_metadata=target_metadata
         )
