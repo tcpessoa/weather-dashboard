@@ -6,17 +6,19 @@ const generateRandomYAxis = () => {
   return yAxis;
 }
 
-const data = {
+export const data = {
   xAxis: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
   yAxis: generateRandomYAxis(),
 }
 
 
 // mock fetching data from API
-export const fetchData = () => {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      resolve(data);
-    }, 5000);
-  });
+export const fetchData = async () => {
+  try {
+    const response = await fetch('/weather');
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
 }

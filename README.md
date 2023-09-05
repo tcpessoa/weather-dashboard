@@ -40,13 +40,20 @@ Built with React and Apache Echarts.
 
 Currently using `echarts-for-react`, check examples [here](https://git.hust.cc/echarts-for-react/examples/simple)
 
+```
+npm install;
+npm run start
+```
 
-# TODO
-- [x] Validate the JSON response of openweathermap so that I have a types object after the request
-- [x] Fix the pytest error
-- [x] Build UI dashboard
-- [ ] Build dashboard visualizations
-- [ ] Build dashboard API
-- [ ] Connect API data that queries the Database to the UI dashboard
+# Backend
 
+- `cd backend/`
+- Then:
 
+```sh
+uvicorn backend.main:app --reload
+```
+
+# NOTES
+
+The UI has a proxy to proxy `/weather` requests to the backend running on `http://localhost:8000`
