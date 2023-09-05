@@ -1,6 +1,7 @@
 import './App.css';
 import BarChart from './components/BarChart';
 import LineChart from './components/LineChart';
+import WeatherChart from './components/WeatherChart';
 import SampleHello from './components/SampleHello';
 import { fetchData } from './services/Api';
 import { useEffect, useState } from "react"
@@ -62,7 +63,7 @@ function App() {
         {loadingWeather ? (
           <h2 style={{ color: 'black' }}>Loading...</h2>
         ) : (
-          <LineChart data={weatherData} />
+          <WeatherChart data={weatherData} />
         )}
 
       </div>

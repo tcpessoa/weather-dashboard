@@ -6,7 +6,7 @@ A real-time weather dashboard
 ![App Diagram](./docs/WeatherDashboard.excalidraw.png)
 
 # Requirements
-- Python
+- Python 3.11
 - Docker
 - make
 
@@ -34,6 +34,8 @@ This will run all tests under the `tests/` folder.
 
 This project uses Alembic to handle migrations.
 Check more info [here](./alembic/README.md)
+
+# Backend
 
 # Dashboard UI
 Built with React and Apache Echarts.
